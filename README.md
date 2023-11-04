@@ -10,14 +10,15 @@ The project follows three steps:
 ## Files
 The repository contains three folders, one for each step:
 
-    - **Data**
-    Contains the csv files with the data disaster_categories.csv and disaster_messages.csv. The file process_data.py with the ETL code.
+- **Data**
+  Contains the csv files with the data disaster_categories.csv and disaster_messages.csv. The file process_data.py with the ETL code.
 
-    - **Models**
-    Contains the file train_classifier.py with the model code.
+- **Models**
+  Contains the file train_classifier.py with the model code.
 
-    - **App**
-    Contains the file run.py that runs the API integration.
+- **App**
+  Contains the file run.py that runs the API integration.
+
 
 
 ## Instructions:
