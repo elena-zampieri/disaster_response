@@ -2,8 +2,17 @@ import sys
 import pandas as pd
 from sqlalchemy import create_engine
 
-
 def load_data(messages_filepath, categories_filepath):
+    """
+    Load and merge messages and categories data from CSV files.
+
+    Args:
+        messages_filepath (str): Filepath to the messages CSV file.
+        categories_filepath (str): Filepath to the categories CSV file.
+
+    Returns:
+        pd.DataFrame: Merged DataFrame containing messages and categories.
+    """
     try:
         # Load the messages and categories DataFrames from CSV files
         messages = pd.read_csv(messages_filepath)
@@ -14,11 +23,19 @@ def load_data(messages_filepath, categories_filepath):
 
         return df
     except Exception as e:
-        print(f"An error occurred: {str(e)}")
+        print(f"An error occurred: {str(e}")
         return None
 
-
 def clean_data(df):
+    """
+    Clean and preprocess the DataFrame containing messages and categories.
+
+    Args:
+        df (pd.DataFrame): DataFrame containing merged messages and categories.
+
+    Returns:
+        pd.DataFrame: Cleaned and preprocessed DataFrame with one column for each categorie.
+    """
     try:
         # Split the 'categories' column on semicolons and expand it into separate binary columns
         categories = df['categories'].str.split(';', expand=True)
@@ -50,24 +67,26 @@ def clean_data(df):
         print(f"An error occurred: {str(e)}")
         return None
 
-
 def save_data(df, database_filename):
-    
-    engine = create_engine('sqlite:///InsertDatabaseName.db')
-    df.to_sql(database_filename, engine, index=False)
-    pass  
+    """
+    Save the cleaned data to an SQLite database.
 
-def save_data(df, database_filename):
+    Args:
+        df (pd.DataFrame): Cleaned and preprocessed DataFrame.
+        database_filename (str): Filepath for the SQLite database.
+
+    Returns:
+        None
+    """
     try:
         engine = create_engine(f'sqlite:///{database_filename}')
         df.to_sql('DisasterResponse', engine, index=False, if_exists='replace')
         print(f"Data successfully saved to {database_filename}")
     except Exception as e:
         print(f"An error occurred: {str(e)}")
-        
+
 def main():
     if len(sys.argv) == 4:
-
         messages_filepath, categories_filepath, database_filepath = sys.argv[1:]
 
         print('Loading data...\n    MESSAGES: {}\n    CATEGORIES: {}'
@@ -83,13 +102,12 @@ def main():
         print('Cleaned data saved to database!')
     
     else:
-        print('Please provide the filepaths of the messages and categories '\
-              'datasets as the first and second argument respectively, as '\
-              'well as the filepath of the database to save the cleaned data '\
-              'to as the third argument. \n\nExample: python process_data.py '\
-              'disaster_messages.csv disaster_categories.csv '\
+        print('Please provide the filepaths of the messages and categories '
+              'datasets as the first and second argument respectively, as '
+              'well as the filepath of the database to save the cleaned data '
+              'to as the third argument. \n\nExample: python process_data.py '
+              'disaster_messages.csv disaster_categories.csv '
               'DisasterResponse.db')
-
 
 if __name__ == '__main__':
     main()

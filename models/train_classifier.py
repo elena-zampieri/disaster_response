@@ -8,16 +8,19 @@ from sklearn.multioutput import MultiOutputClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.pipeline import Pipeline
 from sklearn.metrics import classification_report
-from sklearn.model_selection import GridSearchCV
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
-from sklearn.metrics import hamming_loss
 import pickle
-import numpy as np
 import string
 
-
-
 def load_data(database_filepath):
+    """
+    Load and prepare data from an SQLite database.
+
+    Args:
+        database_filepath (str): Filepath to the SQLite database.
+
+    Returns:
+        tuple: A tuple containing feature (X), target (Y), and category names.
+    """
     try:
         engine = create_engine(f'sqlite:///{database_filepath}')
         df = pd.read_sql_table('DisasterResponse', con=engine)
@@ -34,8 +37,16 @@ def load_data(database_filepath):
         print(f"An error occurred: {str(e)}")
         return None, None, None  # Return None values to indicate an error
 
-
 def tokenize(text):
+    """
+    Tokenize and preprocess text data.
+
+    Args:
+        text (str): Input text to be tokenized.
+
+    Returns:
+        list: List of preprocessed tokens.
+    """
     # Tokenize the text
     tokens = word_tokenize(text)
     
@@ -47,8 +58,13 @@ def tokenize(text):
 
     return tokens
 
-
 def build_model():
+    """
+    Build a machine learning model pipeline.
+
+    Returns:
+        sklearn.pipeline.Pipeline: Model pipeline.
+    """
     pipeline = Pipeline([
         ('vect', CountVectorizer(tokenizer=tokenize)),
         ('tfidf', TfidfTransformer()),
@@ -56,9 +72,19 @@ def build_model():
     ])
     return pipeline
 
-
-
 def evaluate_model(model, X_test, Y_test, category_names):
+    """
+    Evaluate the machine learning model.
+
+    Args:
+        model: Machine learning model to be evaluated.
+        X_test: Test features.
+        Y_test: True test labels.
+        category_names: List of category names.
+
+    Returns:
+        None
+    """
     Y_pred = model.predict(X_test)
 
     for i, category_name in enumerate(category_names):
@@ -66,11 +92,19 @@ def evaluate_model(model, X_test, Y_test, category_names):
         print(classification_report(Y_test[category_name], Y_pred[:, i]))
         print("\n" + "=" * 60 + "\n")
 
-
 def save_model(model, model_filepath):
+    """
+    Save the trained machine learning model to a file.
+
+    Args:
+        model: Trained machine learning model.
+        model_filepath: Filepath to save the model.
+
+    Returns:
+        None
+    """
     with open(model_filepath, 'wb') as file:
         pickle.dump(model, file)
-
 
 def main():
     if len(sys.argv) == 3:
