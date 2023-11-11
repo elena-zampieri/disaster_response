@@ -23,7 +23,7 @@ def load_data(messages_filepath, categories_filepath):
 
         return df
     except Exception as e:
-        print(f"An error occurred: {str(e}")
+        print('An error occurred')
         return None
 
 def clean_data(df):
@@ -64,7 +64,7 @@ def clean_data(df):
         
         return df
     except Exception as e:
-        print(f"An error occurred: {str(e)}")
+        print("An error occurred")
         return None
 
 def save_data(df, database_filename):
@@ -79,11 +79,11 @@ def save_data(df, database_filename):
         None
     """
     try:
-        engine = create_engine(f'sqlite:///{database_filename}')
+        engine = create_engine('sqlite:///{}'.format(database_filename))
         df.to_sql('DisasterResponse', engine, index=False, if_exists='replace')
-        print(f"Data successfully saved to {database_filename}")
+        print('Data successfully saved to{}'.format(database_filename))
     except Exception as e:
-        print(f"An error occurred: {str(e)}")
+        print("An error occurred:")
 
 def main():
     if len(sys.argv) == 4:

@@ -2,6 +2,8 @@ import sys
 import pandas as pd
 from sqlalchemy import create_engine
 from nltk.tokenize import word_tokenize
+import nltk
+nltk.download('punkt')
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.multioutput import MultiOutputClassifier
@@ -22,7 +24,7 @@ def load_data(database_filepath):
         tuple: A tuple containing feature (X), target (Y), and category names.
     """
     try:
-        engine = create_engine(f'sqlite:///{database_filepath}')
+        engine = create_engine('sqlite:///{}'.format(database_filepath))
         df = pd.read_sql_table('DisasterResponse', con=engine)
 
         # Extract the feature (X) and target (Y) data
@@ -34,7 +36,7 @@ def load_data(database_filepath):
 
         return X, Y, category_names
     except Exception as e:
-        print(f"An error occurred: {str(e)}")
+        print('An error occurred:{}'.format(str(e)))
         return None, None, None  # Return None values to indicate an error
 
 def tokenize(text):
@@ -88,7 +90,7 @@ def evaluate_model(model, X_test, Y_test, category_names):
     Y_pred = model.predict(X_test)
 
     for i, category_name in enumerate(category_names):
-        print(f"Category: {category_name}\n")
+        print('Category:{}'.format(category_name))
         print(classification_report(Y_test[category_name], Y_pred[:, i]))
         print("\n" + "=" * 60 + "\n")
 
