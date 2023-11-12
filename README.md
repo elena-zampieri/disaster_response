@@ -1,5 +1,6 @@
 ## About the Project
-This project uses data from Appen to develop a model for an API that classifies disaster-related messages.
+This project uses data from Appen to develop a model for an API that classifies disaster-related messages.  
+
 **Repository Link:** https://github.com/elena-zampieri/disaster_response
 
 ## Summary 
