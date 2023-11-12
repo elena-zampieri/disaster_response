@@ -49,6 +49,9 @@ def clean_data(df):
         for column in categories:
             categories[column] = categories[column].str[-1]
             categories[column] = categories[column].astype(int)
+
+        # Convert to binary
+        categories.replace(2, 1, inplace=True)
         
         # Drop the original 'categories' column
         df = df.drop('categories', axis=1)

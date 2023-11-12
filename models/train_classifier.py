@@ -4,7 +4,7 @@ from sqlalchemy import create_engine
 from nltk.tokenize import word_tokenize
 import nltk
 nltk.download('punkt')
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.multioutput import MultiOutputClassifier
 from sklearn.ensemble import RandomForestClassifier
@@ -62,16 +62,29 @@ def tokenize(text):
 
 def build_model():
     """
-    Build a machine learning model pipeline.
+    Build a machine learning model pipeline with grid search.
 
     Returns:
-        sklearn.pipeline.Pipeline: Model pipeline.
+        sklearn.model_selection.GridSearchCV: Model with grid search.
     """
     pipeline = Pipeline([
         ('vect', CountVectorizer(tokenizer=tokenize)),
         ('tfidf', TfidfTransformer()),
         ('clf', MultiOutputClassifier(RandomForestClassifier()))
     ])
+
+    # Define parameters for grid search
+    parameters = {
+        'tfidf__use_idf': (True, False),
+        'vect__max_df': (0.5, 1.0),
+        'vect__max_features': (None, 5000),
+        'clf__estimator__n_estimators': [50],
+        'clf__estimator__min_samples_split': [2]
+    }
+
+    # Creating GridSearchCV object
+    pipeline = GridSearchCV(pipeline, param_grid=parameters, verbose=2, n_jobs=-1)
+
     return pipeline
 
 def evaluate_model(model, X_test, Y_test, category_names):
@@ -117,9 +130,11 @@ def main():
         
         print('Building model...')
         model = build_model()
-        
+
         print('Training model...')
         model.fit(X_train, Y_train)
+
+        print('Best Parameters:', model.best_params_)
         
         print('Evaluating model...')
         evaluate_model(model, X_test, Y_test, category_names)
